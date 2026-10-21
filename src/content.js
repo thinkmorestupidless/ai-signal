@@ -73,36 +73,45 @@
     const entry = { text: post.text, badge };
     rendered.set(post.id, entry);
 
-    if (settings.hideEnabled && result.score !== null && result.score >= settings.hideAbove && !revealed.has(post.id)) {
+    if (settings.hideEnabled && result.score !== null && result.score >= settings.hideAbove) {
+      const wasRevealed = revealed.has(post.id);
       hide(post, result, entry);
+      if (wasRevealed) entry.stub.querySelector('.aisig-show').click();
     }
   }
 
-  // Hide the whole card and leave a one-line stub. The card stays in the DOM
-  // because LinkedIn's renderer owns it and breaks if its nodes vanish.
+  // Hide the whole card and leave a one-line stub whose button toggles the
+  // card back and forth. The card stays in the DOM because LinkedIn's
+  // renderer owns it and breaks if its nodes vanish.
   function hide(post, result, entry) {
     const card = post.card;
     const stub = document.createElement('div');
     stub.className = 'aisig-stub';
     stub.dataset.level = level(result);
     const light = FACE[stub.dataset.level][0];
-    const mood = '🤮'; // hidden is hidden, whatever the band
-    const show = document.createElement('button');
-    show.type = 'button';
-    show.className = 'aisig-show';
-    show.textContent = 'show';
-    stub.append(light + ' ' + mood + ' Hidden a post scoring ' + result.score + ' ');
-    stub.appendChild(show);
-    show.addEventListener('click', e => {
+    const text = document.createElement('span');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'aisig-show';
+    stub.append(text, button);
+
+    const setHidden = hidden => {
+      card.style.setProperty('display', hidden ? 'none' : (entry.display || ''), hidden ? 'important' : '');
+      text.textContent = light + ' 🤮 ' + (hidden ? 'Hidden' : 'Showing') + ' a post scoring ' + result.score + ' ';
+      button.textContent = hidden ? 'show' : 'hide';
+      stub.dataset.hidden = hidden ? '1' : '0';
+      if (hidden) revealed.delete(post.id); else revealed.add(post.id);
+    };
+    button.addEventListener('click', e => {
       e.preventDefault(); e.stopPropagation();
-      revealed.add(post.id);
-      unhide(entry);
+      setHidden(stub.dataset.hidden !== '1');
     });
+
     card.parentElement.insertBefore(stub, card);
     entry.stub = stub;
     entry.card = card;
     entry.display = card.style.display;
-    card.style.setProperty('display', 'none', 'important');
+    setHidden(true);
   }
 
   function unhide(entry) {

@@ -16,7 +16,8 @@ Click the pill for the reasons: the stylistic signals found, each with the weigh
 removed. Posts under 30 words are not scored. Comments are not scored.
 
 Optionally, posts at or above a score you choose are hidden. The card is collapsed to a one-line
-stub ("🔴 🤮 Hidden a post scoring 84 · show") and comes back on click. The card stays in the
+stub ("🔴 🤮 Hidden a post scoring 84 · show"). The button toggles: show expands the post
+under the stub, hide collapses it again. The card stays in the
 DOM with `display: none` rather than being removed, because LinkedIn's renderer owns those nodes
 and throws when they vanish under it.
 
