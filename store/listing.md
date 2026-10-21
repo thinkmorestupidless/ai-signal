@@ -46,10 +46,19 @@ hide posts above a chosen score.
   content script has to read the text of posts on those pages to score them and insert the
   badge. No other hosts are touched. No remote code.
 
-## Data usage disclosure
-The extension does not collect, transmit or store any user data. Post text is read in the page
-and scored in the page; nothing is sent anywhere. Tick "does not collect user data"; no privacy
-policy URL is required, but the repository README serves if one is asked for.
+## Privacy tab, field by field
+- Single purpose description: the line under "Single purpose" above.
+- Permission justification, `storage`: the `storage` line above.
+- Permission justification, host permissions: the host-access line above.
+- Are you using remote code? No. All code is in the package; nothing is fetched or evaluated.
+- Data usage, "What user data do you plan to collect?": tick nothing. No personally
+  identifiable information, health, financial, authentication, personal communications,
+  location, web history, user activity or website content is collected. Website content is
+  read in the page to compute the score and is not stored or transmitted.
+- Certifications: tick all three. Data is not sold to third parties, is not used or transferred
+  for purposes unrelated to the item's single purpose, and is not used or transferred to
+  determine creditworthiness or for lending.
+- Privacy policy URL: https://github.com/thinkmorestupidless/ai-signal/blob/main/PRIVACY.md
 
 ## Assets
 - Icon 128×128: `icons/icon128.png`, drawn by `icon.py` (needs Pillow; also writes 48 and 16).
