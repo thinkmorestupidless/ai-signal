@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "AI Signal",
+  "version": "0.1.0",
+  "description": "Scores LinkedIn posts for signs of AI-generated writing and shows the score as a badge. A signal, not a verdict.",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "AI Signal"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["src/scorer.js", "src/linkedin.js", "src/content.js"],
+      "css": ["src/badge.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

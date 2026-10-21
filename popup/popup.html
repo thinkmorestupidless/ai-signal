@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AI Signal</title>
+  <style>
+    body { font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 14px 16px; width: 280px; color: #1d1d1f; }
+    h1 { font-size: 14px; margin: 0 0 10px; }
+    label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; }
+    input[type=number] { width: 60px; }
+    select { max-width: 150px; }
+    p.note { color: #6b6b6b; font-size: 12px; margin: 12px 0 0; }
+    @media (prefers-color-scheme: dark) { body { background: #1e1e1e; color: #e8e6e3; } p.note { color: #a5a5a5; } }
+  </style>
+</head>
+<body>
+  <h1>AI Signal</h1>
+  <label>Enabled on LinkedIn <input type="checkbox" id="enabled"></label>
+  <label>Scorer <select id="scorer"><option value="heuristic">Heuristic (local, no model)</option></select></label>
+  <label>Minimum words to score <input type="number" id="minWords" min="10" max="500" step="5"></label>
+  <label>Show the reasons <input type="checkbox" id="showSignals"></label>
+  <p class="note">The score is a stylistic signal, not a verdict. Short, edited or unusual writing defeats it, and it flags some human writers unfairly. Nothing leaves your browser.</p>
+  <script src="popup.js"></script>
+</body>
+</html>
