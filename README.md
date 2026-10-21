@@ -5,12 +5,20 @@ score as a badge above each post. It is a signal, not a verdict.
 
 ## What it does
 
-On the LinkedIn feed and on a post's own page, each post gets a pill above its text:
+On the LinkedIn feed and on a post's own page, each post gets a pill above its text with a
+traffic light, the score and a mood:
 
-    ● AI signal 72  medium confidence
+    🟢 AI signal 23 😌  medium confidence
+    🟡 AI signal 52 🤨  medium confidence
+    🔴 AI signal 84 🤮  medium confidence
 
 Click the pill for the reasons: the stylistic signals found, each with the weight it added or
 removed. Posts under 30 words are not scored. Comments are not scored.
+
+Optionally, posts at or above a score you choose are hidden. The card is collapsed to a one-line
+stub ("🔴 🤮 Hidden a post scoring 84 · show") and comes back on click. The card stays in the
+DOM with `display: none` rather than being removed, because LinkedIn's renderer owns those nodes
+and throws when they vanish under it.
 
 ## How it scores
 
@@ -33,8 +41,8 @@ it behind the same interface; the popup already has the selector.
 
 1. Open `chrome://extensions`, turn on Developer mode.
 2. Load unpacked, choose this directory.
-3. Open LinkedIn. The popup (toolbar icon) has the switch, the minimum word count and whether to
-   show the reasons.
+3. Open LinkedIn. The popup (toolbar icon) has the switch, the minimum word count, whether to
+   show the reasons, and the hide threshold.
 
 ## Develop
 

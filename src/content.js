@@ -8,9 +8,13 @@
   'use strict';
 
   const { scorer, site } = globalThis.AiSignal;
-  const DEFAULTS = { enabled: true, minWords: 30, showSignals: true };
+  const DEFAULTS = { enabled: true, minWords: 30, showSignals: true, hideEnabled: false, hideAbove: 80 };
   let settings = { ...DEFAULTS };
-  const rendered = new Map(); // post id -> { text, badge }
+  const rendered = new Map(); // post id -> { text, badge, stub? }
+  const revealed = new Set(); // post ids the reader chose to show despite the threshold
+
+  // Traffic light and mood per level.
+  const FACE = { high: ['🔴', '🤮'], mid: ['🟡', '🤨'], low: ['🟢', '😌'], na: ['⚪', '🤷'] };
 
   function level(result) {
     if (result.score === null) return 'na';
@@ -33,8 +37,11 @@
     pill.className = 'aisig-pill';
     const label = result.score === null ? 'AI signal: n/a' : 'AI signal ' + result.score;
     const conf = result.score === null ? result.reason : result.confidence + ' confidence';
-    pill.innerHTML = '<span class="aisig-dot"></span><span class="aisig-label"></span><span class="aisig-conf"></span>';
+    pill.innerHTML = '<span class="aisig-light"></span><span class="aisig-label"></span><span class="aisig-mood"></span><span class="aisig-conf"></span>';
+    const [light, mood] = FACE[badge.dataset.level];
+    pill.querySelector('.aisig-light').textContent = light;
     pill.querySelector('.aisig-label').textContent = label;
+    pill.querySelector('.aisig-mood').textContent = mood;
     pill.querySelector('.aisig-conf').textContent = conf;
     pill.title = 'Heuristic signal, not a verdict. Click for the reasons.';
     badge.appendChild(pill);
@@ -63,7 +70,45 @@
 
     const anchor = site.badgeAnchor(post);
     anchor.parentElement.insertBefore(badge, anchor);
-    rendered.set(post.id, { text: post.text, badge });
+    const entry = { text: post.text, badge };
+    rendered.set(post.id, entry);
+
+    if (settings.hideEnabled && result.score !== null && result.score >= settings.hideAbove && !revealed.has(post.id)) {
+      hide(post, result, entry);
+    }
+  }
+
+  // Hide the whole card and leave a one-line stub. The card stays in the DOM
+  // because LinkedIn's renderer owns it and breaks if its nodes vanish.
+  function hide(post, result, entry) {
+    const card = post.card;
+    const stub = document.createElement('div');
+    stub.className = 'aisig-stub';
+    stub.dataset.level = level(result);
+    const [light, mood] = FACE[stub.dataset.level];
+    const show = document.createElement('button');
+    show.type = 'button';
+    show.className = 'aisig-show';
+    show.textContent = 'show';
+    stub.append(light + ' ' + mood + ' Hidden a post scoring ' + result.score + ' ');
+    stub.appendChild(show);
+    show.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      revealed.add(post.id);
+      unhide(entry);
+    });
+    card.parentElement.insertBefore(stub, card);
+    entry.stub = stub;
+    entry.card = card;
+    entry.display = card.style.display;
+    card.style.setProperty('display', 'none', 'important');
+  }
+
+  function unhide(entry) {
+    if (!entry.stub) return;
+    entry.stub.remove();
+    entry.card.style.display = entry.display || '';
+    delete entry.stub;
   }
 
   function scan() {
@@ -80,7 +125,7 @@
   }
 
   function clear() {
-    for (const { badge } of rendered.values()) badge.remove();
+    for (const entry of rendered.values()) { unhide(entry); entry.badge.remove(); }
     rendered.clear();
   }
 
@@ -94,7 +139,7 @@
     scan();
     new MutationObserver(muts => {
       for (const m of muts) {
-        if (m.target.closest && m.target.closest('.aisig-badge')) continue;
+        if (m.target.closest && m.target.closest('.aisig-badge, .aisig-stub')) continue;
         schedule();
         return;
       }

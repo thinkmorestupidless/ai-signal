@@ -26,11 +26,7 @@
   line-height: 18px;
 }
 .aisig-pill:hover { border-color: var(--aisig-accent); }
-.aisig-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--aisig-accent);
-  flex: none;
-}
+.aisig-light, .aisig-mood { font-size: 13px; line-height: 1; }
 .aisig-label { font-weight: 600; }
 .aisig-conf { opacity: 0.65; }
 
@@ -47,3 +43,21 @@
 .aisig-detail li[data-sign="ai"] { color: color-mix(in srgb, #c23b3b 75%, currentColor); }
 .aisig-detail li[data-sign="human"] { color: color-mix(in srgb, #2e8b57 75%, currentColor); }
 .aisig-foot { margin: 6px 0 0; opacity: 0.65; font-size: 11px; }
+
+.aisig-stub {
+  margin: 0 0 8px;
+  padding: 8px 14px;
+  border: 1px dashed color-mix(in srgb, currentColor 30%, transparent);
+  border-left: 3px solid var(--aisig-accent, #c23b3b);
+  border-radius: 8px;
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: inherit;
+  opacity: 0.8;
+}
+.aisig-stub[data-level="high"] { --aisig-accent: #c23b3b; }
+.aisig-stub[data-level="mid"]  { --aisig-accent: #d9912a; }
+.aisig-show {
+  border: 0; padding: 0; margin-left: 6px;
+  background: none; color: inherit; font: inherit;
+  text-decoration: underline; cursor: pointer;
+}
