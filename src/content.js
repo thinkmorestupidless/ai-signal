@@ -25,7 +25,7 @@
 
   function render(post, result) {
     const existing = rendered.get(post.id);
-    if (existing && existing.badge.isConnected) existing.badge.remove();
+    if (existing) { unhide(existing); existing.badge.remove(); }
 
     const badge = document.createElement('div');
     badge.className = 'aisig-badge';
