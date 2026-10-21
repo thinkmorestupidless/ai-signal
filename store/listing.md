@@ -51,14 +51,13 @@ The extension does not collect, transmit or store any user data. Post text is re
 and scored in the page; nothing is sent anywhere. Tick "does not collect user data"; no privacy
 policy URL is required, but the repository README serves if one is asked for.
 
-## Assets still needed
-- Icon 128×128 PNG: `icons/icon128.png` is a placeholder traffic-light disc; replace before
-  submitting if a real mark exists.
-- Screenshots: at least one, 1280×800 or 640×400, PNG or JPEG. Take them on a feed with the
-  badges visible and the reasons panel open on one post; avoid showing other people's names
-  and faces where possible. Suggested: one of the LinkedIn feed, one of a Reddit thread with
-  comments scored, one with a hidden-post stub.
-- Small promo tile 440×280 (optional, helps discovery).
+## Assets
+- Icon 128×128: `icons/icon128.png`, drawn by `icon.py` (needs Pillow; also writes 48 and 16).
+- Small promo tile 440×280: `promo-small-440x280.png`, and marquee 1400×560:
+  `promo-marquee-1400x560.png`, both drawn by `promo.py` (macOS Helvetica Neue).
+- Screenshots: at least one, 1280×800 or 640×400, PNG or JPEG. Not kept in the repo because
+  they show a real feed. Take them with the badges visible and the reasons panel open on one
+  post, and pixelate other people's names and faces before uploading.
 
 ## Steps
 1. Register at https://chrome.google.com/webstore/devconsole (one-time 5 USD fee, Google account).
