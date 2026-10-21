@@ -85,7 +85,8 @@
     const stub = document.createElement('div');
     stub.className = 'aisig-stub';
     stub.dataset.level = level(result);
-    const [light, mood] = FACE[stub.dataset.level];
+    const light = FACE[stub.dataset.level][0];
+    const mood = '🤮'; // hidden is hidden, whatever the band
     const show = document.createElement('button');
     show.type = 'button';
     show.className = 'aisig-show';
