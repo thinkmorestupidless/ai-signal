@@ -1,12 +1,13 @@
 # AI Signal
 
-A Chrome extension that scores LinkedIn posts for signs of AI-generated writing and shows the
-score as a badge above each post. It is a signal, not a verdict.
+A Chrome extension that scores LinkedIn and Reddit posts for signs of AI-generated writing and
+shows the score as a badge above each one. It is a signal, not a verdict.
 
 ## What it does
 
-On the LinkedIn feed and on a post's own page, each post gets a pill above its text with a
-traffic light, the score and a mood:
+On the LinkedIn feed, on Reddit listings and on a post's own page, each post gets a pill above
+its text with a traffic light, the score and a mood. On Reddit, comments are scored too (there is
+a switch), and a post's title counts as part of its text:
 
     🟢 AI signal 23 😌  medium confidence
     🟡 AI signal 52 🤨  medium confidence
@@ -50,16 +51,25 @@ it behind the same interface; the popup already has the selector.
     node test/run.js
 
 runs the scorer over the samples in `test/samples.js` and checks it separates the obvious cases.
-The LinkedIn adapter in `src/linkedin.js` holds every selector; it was verified against the 2026
-UI (`componentkey` attributes, `data-testid="expandable-text-box"`), with a fallback for the older
-`feed-shared-update-v2` markup. Full post text is in the DOM even when clamped behind "… more", so
-nothing is expanded.
+Each site has one adapter that holds every selector and exposes `findPosts()` and
+`badgeAnchor()`; the content script is site-agnostic and the manifest loads one adapter per host.
+
+- `src/linkedin.js` was verified against the 2026 UI (`componentkey` attributes,
+  `data-testid="expandable-text-box"`), with a fallback for the older `feed-shared-update-v2`
+  markup. Full post text is in the DOM even when clamped behind "… more".
+- `src/reddit.js` covers the web-component UI (`shreddit-post`, `shreddit-comment`, light-DOM
+  slots `text-body` and `comment`, ids ending `-post-rtjson-content` and
+  `-comment-rtjson-content`) and old.reddit.com (`div.thing`, `.usertext-body .md`). It was
+  verified in jsdom against saved copies of the front page and a post page from 2026-10-21; the
+  old-Reddit selectors are from memory. Feed cards carry the full text of a post behind a CSS
+  clamp, so they score the same as the post page.
 
 ## Layout
 
-    manifest.json      MV3; content script on https://www.linkedin.com/*
+    manifest.json      MV3; one content-script entry per site
     src/scorer.js      the heuristic scorer (also loadable in node)
-    src/linkedin.js    finds posts and their text
+    src/linkedin.js    LinkedIn adapter: finds posts and their text
+    src/reddit.js      Reddit adapter: posts and comments, new and old UI
     src/content.js     scans, scores, renders badges, re-scans on DOM changes
     src/badge.css      badge styles, light and dark
     popup/             settings

@@ -8,7 +8,7 @@
   'use strict';
 
   const { scorer, site } = globalThis.AiSignal;
-  const DEFAULTS = { enabled: true, minWords: 30, showSignals: true, hideEnabled: false, hideAbove: 80 };
+  const DEFAULTS = { enabled: true, minWords: 30, showSignals: true, hideEnabled: false, hideAbove: 80, scoreComments: true };
   let settings = { ...DEFAULTS };
   const rendered = new Map(); // post id -> { text, badge, stub? }
   const revealed = new Set(); // post ids the reader chose to show despite the threshold
@@ -94,10 +94,11 @@
     button.type = 'button';
     button.className = 'aisig-show';
     stub.append(text, button);
+    const noun = post.kind === 'comment' ? 'comment' : 'post';
 
     const setHidden = hidden => {
       card.style.setProperty('display', hidden ? 'none' : (entry.display || ''), hidden ? 'important' : '');
-      text.textContent = light + ' 🤮 ' + (hidden ? 'Hidden' : 'Showing') + ' a post scoring ' + result.score + ' ';
+      text.textContent = light + ' 🤮 ' + (hidden ? 'Hidden' : 'Showing') + ' a ' + noun + ' scoring ' + result.score + ' ';
       button.textContent = hidden ? 'show' : 'hide';
       stub.dataset.hidden = hidden ? '1' : '0';
       if (hidden) revealed.delete(post.id); else revealed.add(post.id);
@@ -124,6 +125,7 @@
   function scan() {
     if (!settings.enabled) return;
     for (const post of site.findPosts(document)) {
+      if (post.kind === 'comment' && !settings.scoreComments) continue;
       const prev = rendered.get(post.id);
       if (prev && prev.text === post.text && prev.badge.isConnected) continue;
       const result = scorer.score(post.text);

@@ -25,7 +25,9 @@
     clone.querySelectorAll(TOGGLE).forEach(b => b.remove());
     clone.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
     clone.querySelectorAll('p, div, li').forEach(el => el.append('\n'));
-    return clone.textContent.replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+    return clone.textContent.replace(/\r/g, '')
+      .split('\n').map(l => l.replace(/[ \t]+/g, ' ').trim()).join('\n')
+      .replace(/\n{3,}/g, '\n\n').trim();
   }
 
   function findTextBox(card) {
@@ -51,7 +53,7 @@
       const id = cardId(card) || ('anon:' + posts.length);
       if (seen.has(id)) continue;
       seen.add(id);
-      posts.push({ id, card, box, text: bodyText(box) });
+      posts.push({ id, card, box, text: bodyText(box), kind: 'post' });
     }
     return posts;
   }
@@ -62,5 +64,5 @@
     return p.parentElement ? p : post.box;
   }
 
-  root.AiSignal = Object.assign(root.AiSignal || {}, { site: { name: 'linkedin', findPosts, badgeAnchor } });
+  root.AiSignal = Object.assign(root.AiSignal || {}, { site: { name: 'linkedin', findPosts, badgeAnchor, hasComments: false } });
 })(typeof globalThis !== 'undefined' ? globalThis : this);

@@ -1,4 +1,4 @@
-const DEFAULTS = { enabled: true, minWords: 30, showSignals: true, scorer: 'heuristic', hideEnabled: false, hideAbove: 80 };
+const DEFAULTS = { enabled: true, minWords: 30, showSignals: true, scorer: 'heuristic', hideEnabled: false, hideAbove: 80, scoreComments: true };
 const $ = id => document.getElementById(id);
 
 chrome.storage.sync.get(DEFAULTS, s => {
@@ -8,7 +8,10 @@ chrome.storage.sync.get(DEFAULTS, s => {
   $('scorer').value = s.scorer;
   $('hideEnabled').checked = s.hideEnabled;
   $('hideAbove').value = s.hideAbove;
+  $('scoreComments').checked = s.scoreComments;
 });
+
+$('scoreComments').addEventListener('change', e => chrome.storage.sync.set({ scoreComments: e.target.checked }));
 
 $('hideEnabled').addEventListener('change', e => chrome.storage.sync.set({ hideEnabled: e.target.checked }));
 $('hideAbove').addEventListener('change', e => {

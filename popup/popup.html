@@ -16,10 +16,11 @@
 </head>
 <body>
   <h1>AI Signal</h1>
-  <label>Enabled on LinkedIn <input type="checkbox" id="enabled"></label>
+  <label>Enabled on LinkedIn and Reddit <input type="checkbox" id="enabled"></label>
   <label>Scorer <select id="scorer"><option value="heuristic">Heuristic (local, no model)</option></select></label>
   <label>Minimum words to score <input type="number" id="minWords" min="10" max="500" step="5"></label>
   <label>Show the reasons <input type="checkbox" id="showSignals"></label>
+  <label>Score comments too (Reddit) <input type="checkbox" id="scoreComments"></label>
   <hr>
   <label>Hide posts that score high <input type="checkbox" id="hideEnabled"></label>
   <label>Hide at or above <span><input type="number" id="hideAbove" min="1" max="100" step="5"> / 100</span></label>

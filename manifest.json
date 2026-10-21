@@ -2,8 +2,10 @@
   "manifest_version": 3,
   "name": "AI Signal",
   "version": "0.1.0",
-  "description": "Scores LinkedIn posts for signs of AI-generated writing and shows the score as a badge. A signal, not a verdict.",
-  "permissions": ["storage"],
+  "description": "Scores LinkedIn and Reddit posts for signs of AI-generated writing and shows the score as a badge. A signal, not a verdict.",
+  "permissions": [
+    "storage"
+  ],
   "action": {
     "default_popup": "popup/popup.html",
     "default_title": "AI Signal"
@@ -15,9 +17,33 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.linkedin.com/*"],
-      "js": ["src/scorer.js", "src/linkedin.js", "src/content.js"],
-      "css": ["src/badge.css"],
+      "matches": [
+        "https://www.linkedin.com/*"
+      ],
+      "js": [
+        "src/scorer.js",
+        "src/linkedin.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/badge.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.reddit.com/*",
+        "https://old.reddit.com/*",
+        "https://new.reddit.com/*"
+      ],
+      "js": [
+        "src/scorer.js",
+        "src/reddit.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/badge.css"
+      ],
       "run_at": "document_idle"
     }
   ]

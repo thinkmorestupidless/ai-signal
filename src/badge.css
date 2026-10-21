@@ -3,6 +3,8 @@
 .aisig-badge {
   --aisig-accent: #8a8a8a;
   display: block;
+  position: relative;
+  z-index: 1; /* above Reddit's full-card overlay link */
   margin: 4px 0 8px;
   font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: inherit;
